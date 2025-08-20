@@ -1,0 +1,10 @@
+*.o
+*.elf
+*.oelf
+*.bin
+*.pkg
+*.prx
+*.sprx
+*.sfo
+*.gp4
+.DS_Store
