@@ -5,7 +5,7 @@ TITLE_ID    := BREW00001
 CONTENT_ID  := IV0000-$(TITLE_ID)_00-HELLOHOMEBREW000
 
 # Libraries linked into the ELF.
-LIBS        := -lc -lkernel -lc++
+LIBS        := -lc -lkernel -lc++ -lSceAppInstUtil -lSceUserService -lSceSysmodule
 
 # Additional compile flags.
 #EXTRAFLAGS  := 
@@ -56,7 +56,10 @@ all: $(CONTENT_ID).pkg
 $(CONTENT_ID).pkg: pkg.gp4
 	$(TOOLCHAIN)/bin/$(CDIR)/PkgTool.Core pkg_build $< .
 
-pkg.gp4: eboot.bin sce_sys/about/right.sprx sce_sys/param.sfo sce_sys/about/right.sprx sce_module/libSceFios2.prx sce_module/libc.prx sce_sys/icon0.png $(LIBMODULES) $(ASSETS)
+pkg.gp4: eboot.bin \
+	sce_sys/param.sfo sce_sys/about/right.sprx \
+	sce_module/libSceFios2.prx sce_module/libc.prx \
+	$(LIBMODULES) $(ASSETS)
 	$(TOOLCHAIN)/bin/$(CDIR)/create-gp4 -out $@ --content-id=$(CONTENT_ID) --files "$^"
 
 sce_sys/param.sfo: Makefile

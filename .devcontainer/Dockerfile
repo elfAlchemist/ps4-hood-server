@@ -18,7 +18,9 @@ RUN apt-get -y install --no-install-recommends \
     tar \
     lsb-release \
     software-properties-common \
-    gnupg
+    gnupg \
+    git \
+    libsqlite3-dev
 
 RUN ln -s /usr/bin/clang-18 /usr/bin/clang && \
     ln -s /usr/bin/clang++-18 /usr/bin/clang++ && \
