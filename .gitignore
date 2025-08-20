@@ -8,3 +8,6 @@
 *.sfo
 *.gp4
 .DS_Store
+
+build/
+dist/

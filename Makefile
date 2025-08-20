@@ -1,8 +1,8 @@
 # Package metadata.
-TITLE       := Hello Homebrew
+TITLE       := Hood Server
 VERSION     := 1.00
-TITLE_ID    := BREW00001
-CONTENT_ID  := IV0000-$(TITLE_ID)_00-HELLOHOMEBREW000
+TITLE_ID    := HOOD00001
+CONTENT_ID  := IV0000-$(TITLE_ID)_00-HOODSERVER000000
 
 # Libraries linked into the ELF.
 LIBS        := -lc -lkernel -lc++ -lSceAppInstUtil -lSceUserService -lSceSysmodule
@@ -20,11 +20,11 @@ LIBMODULES  := $(wildcard sce_module/*)
 TOOLCHAIN   := $(OO_PS4_TOOLCHAIN)
 PROJDIR     := src
 COMMONDIR   := $(TOOLCHAIN)/samples/_common
-INTDIR      := $(PROJDIR)/x64/Debug
+INTDIR      := build
 
-# Define objects to build
-CFILES      := $(wildcard $(PROJDIR)/*.c)
-CPPFILES    := $(wildcard $(PROJDIR)/*.cpp)
+# Define objects to build (recursive src/)
+CFILES      := $(shell find $(PROJDIR) -type f -name '*.c')
+CPPFILES    := $(shell find $(PROJDIR) -type f -name '*.cpp')
 OBJS        := $(patsubst $(PROJDIR)/%.c, $(INTDIR)/%.o, $(CFILES)) $(patsubst $(PROJDIR)/%.cpp, $(INTDIR)/%.o, $(CPPFILES))
 
 # Define final C/C++ flags
@@ -88,10 +88,13 @@ eboot.bin: $(INTDIR) $(OBJS)
 	$(LD) $(INTDIR)/*.o -o $(INTDIR)/$(PROJDIR).elf $(LDFLAGS)
 	$(TOOLCHAIN)/bin/$(CDIR)/create-fself -in=$(INTDIR)/$(PROJDIR).elf -out=$(INTDIR)/$(PROJDIR).oelf --eboot "eboot.bin" --paid 0x3800000000000011
 
+# Map src/foo/bar.c -> build/foo/bar.o
 $(INTDIR)/%.o: $(PROJDIR)/%.c
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -o $@ $<
 
 $(INTDIR)/%.o: $(PROJDIR)/%.cpp
+	@mkdir -p $(dir $@)
 	$(CCX) $(CXXFLAGS) -o $@ $<
 
 clean:
