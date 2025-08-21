@@ -8,7 +8,7 @@ CONTENT_ID  := IV0000-$(TITLE_ID)_00-HOODSERVER000000
 LIBS        := -lc -lkernel -lc++ -lSceAppInstUtil -lSceUserService -lSceSysmodule
 
 # Additional compile flags.
-#EXTRAFLAGS  := 
+EXTRAFLAGS  := -DORBIS
 
 # Asset and module directories.
 ASSETS 		:= $(wildcard assets/**/*)
@@ -86,7 +86,7 @@ sce_module/libc.prx:
 
 eboot.bin: $(INTDIR) $(OBJS)
 	$(LD) $(shell find $(INTDIR) -type f -name '*.o') -o $(INTDIR)/$(PROJDIR).elf $(LDFLAGS)
-	$(TOOLCHAIN)/bin/$(CDIR)/create-fself -in=$(INTDIR)/$(PROJDIR).elf -out=$(INTDIR)/$(PROJDIR).oelf --eboot "eboot.bin" --paid 0x3800000000000011
+	$(TOOLCHAIN)/bin/$(CDIR)/create-fself -library-path=/usr/lib/x86_64-linux-gnu/ -in=$(INTDIR)/$(PROJDIR).elf -out=$(INTDIR)/$(PROJDIR).oelf --eboot "eboot.bin" --paid 0x3800000000000011
 
 # Map src/foo/bar.c -> build/foo/bar.o
 $(INTDIR)/%.o: $(PROJDIR)/%.c
@@ -103,4 +103,9 @@ clean:
 		sce_sys/param.sfo \
 		sce_sys/about/right.sprx \
 		sce_module/libSceFios2.prx \
-		sce_module/libc.prx
+		sce_module/libc.prx \
+		hood-server.bin
+
+# Additional build target for Linux (development/testing)
+local:
+	g++ $(CFILES) $(CPPFILES) -o hood-server.bin -lsqlite3

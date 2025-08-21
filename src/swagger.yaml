@@ -1,0 +1,235 @@
+openapi: 3.0.4
+info:
+  title: Hood for PlayStation 4
+  description: |-
+    This is an API server for remote management of PlayStation 4 consoles.
+    It allows users to remotely manage applications, games and system settings.
+
+    Some useful links:
+    - [The Pet Store repository](https://github.com/swagger-api/swagger-petstore)
+    - [The source API definition for the Pet Store](https://github.com/swagger-api/swagger-petstore/blob/master/src/main/resources/openapi.yaml)
+  termsOfService: https://swagger.io/terms/
+  contact:
+    email: apiteam@swagger.io
+  license:
+    name: Apache 2.0
+    url: https://www.apache.org/licenses/LICENSE-2.0.html
+  version: 1.0.12
+externalDocs:
+  description: Find out more about Swagger
+  url: https://swagger.io
+servers:
+  - url: https://petstore3.swagger.io/api/v3
+tags:
+  - name: pet
+    description: Everything about your Pets
+    externalDocs:
+      description: Find out more
+      url: https://swagger.io
+  - name: store
+    description: Access to Petstore orders
+    externalDocs:
+      description: Find out more about our store
+      url: https://swagger.io
+  - name: user
+    description: Operations about user
+paths:
+  /packages:
+    get:
+      tags:
+        - package
+      summary: Get a list of installed packages.
+      description: Retrieve a list of all installed packages.
+      operationId: getPackages
+      responses:
+        '200':
+          description: A list of packages.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Package'
+
+  # /packages/{packageId}:
+  #   get:
+  #     tags:
+  #       - package
+  #     summary: Get details of a specific package.
+  #     description: Retrieve detailed information about a specific installed package.
+  #     operationId: getPackageById
+  #     parameters:
+  #       - name: packageId
+  #         in: path
+  #         required: true
+  #         description: The unique identifier of the package.
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: Details of the package.
+  #         content:
+  #           application/json:
+  #             schema:
+  #               $ref: '#/components/schemas/Package'
+  #       '404':
+  #         description: Package not found.
+
+  # /sources:
+  #   get:
+  #     tags:
+  #       - source
+  #     summary: List available package sources.
+  #     operationId: listSources
+  #     responses:
+  #       '200':
+  #         description: List of sources
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: array
+  #               items:
+  #                 type: string
+
+  # /sources/{sourceId}/packages:
+  #   get:
+  #     tags:
+  #       - source
+  #     summary: Browse packages in a source.
+  #     operationId: browseSourcePackages
+  #     parameters:
+  #       - name: sourceId
+  #         in: path
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: List of packages
+  #         content:
+  #           application/json:
+  #             schema:
+  #               type: array
+  #               items:
+  #                 $ref: '#/components/schemas/Package'
+
+  # /sources/{sourceId}/install:
+  #   post:
+  #     tags:
+  #       - source
+  #     summary: Install a package from source.
+  #     operationId: installPackageFromSource
+  #     parameters:
+  #       - name: sourceId
+  #         in: path
+  #         required: true
+  #         schema:
+  #           type: string
+  #       - name: packageId
+  #         in: query
+  #         required: true
+  #         schema:
+  #           type: string
+  #     responses:
+  #       '200':
+  #         description: Package installed
+  #       '404':
+  #         description: Package not found
+
+  /packages/upload:
+    post:
+      tags:
+        - package
+      summary: Upload a package file to be installed.
+      operationId: uploadPackage
+      requestBody:
+        content:
+          application/octet-stream:
+            schema:
+              type: string
+              format: binary
+      responses:
+        '200':
+          description: Package uploaded and installed
+        '400':
+          description: Invalid file
+
+components:
+  schemas:
+    Package:
+      type: object
+      properties:
+        titleId:
+          type: string
+          description: Unique identifier for the package
+        contentId:
+          type: string
+          nullable: true
+          description: Content identifier
+        titleName:
+          type: string
+          nullable: true
+          description: Name of the package
+        lastAccessTime:
+          type: string
+          format: date-time
+          nullable: true
+          description: Last access time
+        category:
+          type: string
+          nullable: true
+          description: Category
+        contentSize:
+          type: integer
+          nullable: true
+          description: Content size in bytes
+        installDate:
+          type: string
+          format: date-time
+          nullable: true
+          description: Install date
+        uiCategory:
+          type: string
+          nullable: true
+          description: UI category
+
+    ApiResponse:
+      type: object
+      properties:
+        code:
+          type: integer
+          format: int32
+        type:
+          type: string
+        message:
+          type: string
+      xml:
+        name: '##default'
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+  # requestBodies:
+  #   Pet:
+  #     description: Pet object that needs to be added to the store
+  #     content:
+  #       application/json:
+  #         schema:
+  #           $ref: '#/components/schemas/Pet'
+  #       application/xml:
+  #         schema:
+  #           $ref: '#/components/schemas/Pet'
+  #   UserArray:
+  #     description: List of user object
+  #     content:
+  #       application/json:
+  #         schema:
+  #           type: array
+  #           items:
+  #             $ref: '#/components/schemas/User'
