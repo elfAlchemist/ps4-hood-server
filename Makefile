@@ -85,7 +85,7 @@ sce_module/libc.prx:
 	cp $(OO_PS4_TOOLCHAIN)/src/modules/libc.prx sce_module/libc.prx
 
 eboot.bin: $(INTDIR) $(OBJS)
-	$(LD) $(INTDIR)/*.o -o $(INTDIR)/$(PROJDIR).elf $(LDFLAGS)
+	$(LD) $(shell find $(INTDIR) -type f -name '*.o') -o $(INTDIR)/$(PROJDIR).elf $(LDFLAGS)
 	$(TOOLCHAIN)/bin/$(CDIR)/create-fself -in=$(INTDIR)/$(PROJDIR).elf -out=$(INTDIR)/$(PROJDIR).oelf --eboot "eboot.bin" --paid 0x3800000000000011
 
 # Map src/foo/bar.c -> build/foo/bar.o
